@@ -1,5 +1,5 @@
-/* Pulse v3 — настоящий каталог: превью iTunes, обложки Apple Music, био Wikipedia.
- * Без зависимостей. Сгенерированные картинки — только для пользовательских
+/* Pulse v3: настоящий каталог: превью iTunes, обложки Apple Music, био Wikipedia.
+ * Без зависимостей. Сгенерированные картинки: только для пользовательских
  * плейлистов/аватаров и как запасной вариант при недоступности обложки. */
 (function () {
   "use strict";
@@ -21,7 +21,7 @@
     var m = Math.floor(sec / 60), s = sec % 60;
     return m + ":" + (s < 10 ? "0" : "") + s;
   }
-  function fmtFull(ms) { if (!ms) return "—"; return fmtTime(ms / 1000); }
+  function fmtFull(ms) { if (!ms) return "-"; return fmtTime(ms / 1000); }
   function fmtDur(sec) {
     sec = Math.floor(sec || 0);
     var h = Math.floor(sec / 3600), m = Math.round((sec % 3600) / 60);
@@ -74,7 +74,7 @@
   function allTracks() { return TRACKS.concat(localTracks); }
   function tracksOfArtist(id) { return TRACKS.filter(function (t) { return t.artistId === id; }); }
   function albumsOfArtist(id) { return ALBUMS.filter(function (a) { return a.artistId === id; }); }
-  // Проверенные официальные каналы. Нет канала — поиск по имени (честный фолбэк).
+  // Проверенные официальные каналы. Нет канала: поиск по имени (честный фолбэк).
   var TUBE = {
     kishlak: "https://www.youtube.com/@kishlak1111",
     jahkhalib: "https://www.youtube.com/@JahKhalibOfficial",
@@ -90,7 +90,7 @@
   }
 
   /* Резолвер прямых ссылок: поиск → конкретное видео (кэш в localStorage).
-   * Ссылки остаются обычными youtube.com/watch — никакого скачивания. */
+   * Ссылки остаются обычными youtube.com/watch: никакого скачивания. */
   var YT_CACHE_KEY = "pulse.ytids";
   var ytCache = {};
   try { ytCache = JSON.parse(localStorage.getItem(YT_CACHE_KEY) || "{}") || {}; } catch (e) { ytCache = {}; }
@@ -298,12 +298,12 @@
         engine.pause();
         toast("Нет связи с аудио-сервером. Проверьте интернет.");
       } else {
-        toast("Не загрузилось — следующий трек");
+        toast("Не загрузилось, следующий трек");
         nextTrack(false);
       }
       paintPlayState();
     },
-    onBlocked: function () { toast("Нажмите play — браузер ждёт вашего жеста"); }
+    onBlocked: function () { toast("Нажмите play, браузер ждёт вашего жеста"); }
   });
 
   var ytMode = false;
@@ -320,7 +320,7 @@
     ytMode = false;
     try { ytEng.stop(); } catch (e) {}
     var t = currentTrack();
-    toast("YouTube недоступен — включаю превью");
+    toast("YouTube недоступен, включаю превью");
     if (t) engine.load(t, true);
     updatePlayerChrome();
   }
@@ -329,7 +329,7 @@
   function previewLen() { return engine.duration() || 30; }
   function pushHistory(id) {
     if (store.history.length && store.history[0].trackId === id) {
-      store.history[0].at = Date.now(); // повтор без переключения — одна запись
+      store.history[0].at = Date.now(); // повтор без переключения: одна запись
       saveStore();
       return;
     }
@@ -506,7 +506,7 @@
       ? "Полный трек с вашего устройства"
       : ytMode
         ? "Полная версия с официального YouTube-канала"
-        : "Играет 30-секундное превью iTunes. Полная версия — " + fmtFull(t.fullMs) + " (ссылки — в меню исполнителей)";
+        : "Играет 30-секундное превью iTunes. Полная версия: " + fmtFull(t.fullMs) + " (ссылки, в меню исполнителей)";
     $("#tDur").textContent = ytMode ? fmtFull(t.fullMs) : fmtTime(previewLen());
     updatePlayerLike();
     paintPlayState();
@@ -580,7 +580,7 @@
   }
   function modalCreatePlaylist() {
     openModal(
-      '<h2>Новый плейлист</h2><p>Название — сейчас, треки — кнопкой «+» из любого списка.</p>' +
+      '<h2>Новый плейлист</h2><p>Название: сейчас, треки: кнопкой «+» из любого списка.</p>' +
       '<div class="field"><label for="plName">Название</label><input class="text-input" id="plName" maxlength="60" placeholder="Например: Утро в городе" /></div>' +
       '<div class="field"><label for="plDesc">Описание (необязательно)</label><input class="text-input" id="plDesc" maxlength="120" placeholder="Настроение, занятие, жанр" /></div>' +
       '<div class="modal-actions"><button class="btn btn-ghost" data-action="close-modal">Отмена</button>' +
@@ -616,7 +616,7 @@
         "<span><b>" + esc(p.title) + "</b><br><span class='kv'>" + p.trackIds.length + " " + plural(p.trackIds.length, "трек", "трека", "треков") + (has ? " · уже добавлен" : "") + "</span></span></button>";
     }).join("");
     openModal(
-      '<h2>Добавить в плейлист</h2><p>' + esc(t.title) + " — " + esc(t.credit) + "</p>" +
+      '<h2>Добавить в плейлист</h2><p>' + esc(t.title) + ": " + esc(t.credit) + "</p>" +
       '<div class="add-list">' + items + "</div>" +
       '<div class="modal-actions"><button class="btn btn-ghost" data-action="close-modal">Готово</button></div>'
     );
@@ -665,7 +665,7 @@
       }
       av = imgTag(Art.avatar(name, name.length * 977 + 13, 2, 96), "mini-cover", 96, "");
       return '<span class="add-item" aria-disabled="true">' + av +
-        "<span><b>" + esc(name) + "</b><br><span class='kv'>Нет в Pulse — только фит</span></span></span>";
+        "<span><b>" + esc(name) + "</b><br><span class='kv'>Нет в Pulse: только фит</span></span></span>";
     }).join("");
     var q = encodeURIComponent(t.credit + " " + t.title);
     var watch = t.yt ? "https://www.youtube.com/watch?v=" + t.yt : "https://www.youtube.com/results?search_query=" + q;
@@ -759,7 +759,7 @@
     var mk = monthKey(Date.now());
     return '<div class="hero"><p class="hero-tag">ГЛАВНАЯ · ' + TRACKS.length + " " + plural(TRACKS.length, "ЗАПИСЬ", "ЗАПИСИ", "ЗАПИСЕЙ") + " · " + ARTISTS.length + " " + plural(ARTISTS.length, "ИСПОЛНИТЕЛЬ", "ИСПОЛНИТЕЛЯ", "ИСПОЛНИТЕЛЕЙ") + " · НАСТОЯЩИЕ ТРЕКИ</p>" +
       "<h1>Чарт СНГ: слушайте оригинал</h1>" +
-      "<p>Кишлак, Big Baby Tape, Баста, Zivert и другие — настоящие записи и обложки. В Pulse играют 30-секундные превью, а полные версии — через YouTube прямо в плеере.</p>" +
+      "<p>Кишлак, Big Baby Tape, Баста, Zivert и другие: настоящие записи и обложки. В Pulse играют 30-секундные превью, а полные версии: через YouTube прямо в плеере.</p>" +
       '<div class="hero-actions"><button class="btn btn-primary" data-action="play-pop">' + ICONS.play + ' Слушать чарт</button>' +
       '<button class="btn" data-action="shuffle-all">' + ICONS.shuffle + ' Мне повезёт</button>' +
       '<button class="btn btn-ghost" data-action="stop-all" aria-label="Остановить воспроизведение">Стоп</button>' +
@@ -819,11 +819,11 @@
       '<a class="btn btn-sm" href="#/history">' + ICONS.clock + ' История (' + store.history.length + ')</a>' +
       '<a class="btn btn-sm btn-ghost" href="#/stats">Статистика месяца</a></div>' +
       '<section class="section"><div class="section-head"><h2>Мои плейлисты</h2><p>' + mine.length + '</p><span class="spacer"></span><button class="btn btn-sm" data-action="create-pl">+ Новый</button></div>' +
-      (mine.length ? '<div class="grid cards">' + mine.map(playlistCard).join("") + "</div>" : '<p class="kv">Пока пусто — соберите первый плейлист под своё настроение.</p>') + "</section>" +
+      (mine.length ? '<div class="grid cards">' + mine.map(playlistCard).join("") + "</div>" : '<p class="kv">Пока пусто: соберите первый плейлист под своё настроение.</p>') + "</section>" +
       '<section class="section"><div class="section-head"><h2>Подборки исполнителей</h2><p>' + autos.length + "</p></div>" +
       '<div class="grid cards">' + autos.map(playlistCard).join("") + "</div></section>" +
       '<section class="section"><div class="section-head"><h2>Мне нравится</h2><p>' + liked.length + '</p><span class="spacer"></span><a class="link-more" href="#/liked">Все треки</a></div>' +
-      (liked.length ? trackListHtml(liked.slice(0, 5), "lib-liked", liked.map(function (t) { return t.id; })) : '<p class="kv">Жмите на сердечко у трека — любимое соберётся здесь.</p>') + "</section>" +
+      (liked.length ? trackListHtml(liked.slice(0, 5), "lib-liked", liked.map(function (t) { return t.id; })) : '<p class="kv">Жмите на сердечко у трека: любимое соберётся здесь.</p>') + "</section>" +
       '<section class="section"><div class="section-head"><h2>Сохранённые альбомы</h2><p>' + als.length + "</p></div>" +
       (als.length ? '<div class="grid cards">' + als.map(albumCard).join("") + "</div>" : '<p class="kv">Откройте альбом и нажмите «Сохранить».</p>') + "</section>" +
       (hist.length ? '<section class="section"><div class="section-head"><h2>Недавно слушали</h2><span class="spacer"></span><a class="link-more" href="#/history">Вся история</a></div>' + trackListHtml(hist, "lib-hist", hist.map(function (t) { return t.id; })) + "</section>" : "");
@@ -833,12 +833,12 @@
     var liked = store.likes.map(trackById).filter(Boolean);
     return '<h1 tabindex="-1">Мне нравится</h1><p class="kv">' + liked.length + " " + plural(liked.length, "трек", "трека", "треков") + " · только ваше</p>" +
       (liked.length ? '<div class="entity-actions"><button class="btn btn-primary" data-action="play-ids" data-ids="' + esc(liked.map(function (t) { return t.id; }).join(",")) + '">' + ICONS.play + ' Слушать</button></div><div class="divider"></div>' + trackListHtml(liked, "liked", liked.map(function (t) { return t.id; }))
-        : emptyBox("Пока без лайков", "Нажимайте на сердечко у трека — всё любимое соберётся здесь.", '<a class="btn btn-primary" href="#/home">Найти любимое</a>'));
+        : emptyBox("Пока без лайков", "Нажимайте на сердечко у трека, всё любимое соберётся здесь.", '<a class="btn btn-primary" href="#/home">Найти любимое</a>'));
   }
 
   function viewHistory() {
     var items = store.history.map(function (h) { return { t: trackById(h.trackId), at: h.at }; }).filter(function (x) { return x.t; });
-    if (!items.length) return '<h1 tabindex="-1">История</h1>' + emptyBox("Вы ещё ничего не слушали", "Включите любой трек — он появится здесь с точным временем.", '<a class="btn btn-primary" href="#/home">К музыке</a>');
+    if (!items.length) return '<h1 tabindex="-1">История</h1>' + emptyBox("Вы ещё ничего не слушали", "Включите любой трек, он появится здесь с точным временем.", '<a class="btn btn-primary" href="#/home">К музыке</a>');
     var rows = items.slice(0, 40).map(function (x, i) {
       return trackRow(x.t, i, items.map(function (y) { return y.t.id; }), false).replace("<span>" + fmtFull(x.t.fullMs) + "</span>", "<span>" + fmtFull(x.t.fullMs) + "<br>" + fmtDate(x.at) + "</span>");
     }).join("");
@@ -881,7 +881,7 @@
       '<div class="entity-actions"><button class="btn btn-primary" data-action="play-ids" data-ids="' + esc(ids.join(",")) + '">' + ICONS.play + ' Слушать превью</button>' +
       '<button class="btn" data-action="save-album" data-id="' + esc(id) + '" aria-pressed="' + (saved ? "true" : "false") + '">' + (saved ? "✓ Сохранено" : "+ Сохранить") + "</button></div>" +
       '<p style="margin:12px 0 0"><a class="text-link" href="https://www.youtube.com/results?search_query=' + encodeURIComponent((a ? a.name : "") + " " + al.title) + '" target="_blank" rel="noopener">Слушать бесплатно на YouTube ' + ICONS.ext + "</a></p></div></div>" +
-      '<p class="kv" style="margin-bottom:12px">В Pulse играют 30-секундные превью. Полные версии — через YouTube (кнопка FULL у трека).</p>' +
+      '<p class="kv" style="margin-bottom:12px">В Pulse играют 30-секундные превью. Полные версии: через YouTube (кнопка FULL у трека).</p>' +
       trackListHtml(tracks, "album-" + id, ids);
   }
 
@@ -913,7 +913,7 @@
     var list = localTracks.length ? localTracks.map(function (t, i) {
       return trackRow(t, i, ids, false).replace('<span title="Полная версия">',
         '<button class="icon-btn" data-action="delete-file" data-id="' + esc(t.id) + '" aria-label="Удалить файл: ' + esc(t.title) + '">' + ICONS.close + '</button><span title="Полная версия">');
-    }).join("") : emptyBox("Пока нет файлов", "Добавьте музыку с устройства — она заиграет целиком, даже без интернета, и останется после перезапуска.", "");
+    }).join("") : emptyBox("Пока нет файлов", "Добавьте музыку с устройства, она заиграет целиком, даже без интернета, и останется после перезапуска.", "");
     return '<h1 tabindex="-1">Мои файлы</h1><p class="kv">Полные версии с вашего устройства. Файлы никуда не отправляются и хранятся только в этом браузере.</p>' +
       '<div class="entity-actions"><label class="btn btn-primary" for="filePick">' + ICONS.plus + ' Добавить файлы<input type="file" id="filePick" accept="audio/*,.mp3,.m4a,.wav,.ogg,.flac,.aac" multiple hidden /></label></div>' +
       '<div class="divider"></div><div class="track-list">' + list + "</div>";
@@ -944,7 +944,7 @@
     var body = top.length
       ? '<div class="hero-stats" style="border:none;margin:6px 0 4px;padding:0"><div><b>' + fmtDur(total) + '</b><span>всего за месяц</span></div><div><b>' + plays + '</b><span>' + plural(plays, "включение", "включения", "включений") + " " + plural(plays, "трека", "треков", "треков") + '</span></div><div><b>' + top.length + '</b><span>' + plural(top.length, "исполнитель", "исполнителя", "исполнителей") + ' в топе</span></div></div>' +
         '<div class="divider"></div>' + statRows(top, max)
-      : emptyBox("В этом месяце тихо", "Включите что-нибудь — счётчик считает только реальное время прослушивания.", '<a class="btn btn-primary" href="#/home">Включить музыку</a>');
+      : emptyBox("В этом месяце тихо", "Включите что-нибудь, счётчик считает только реальное время прослушивания.", '<a class="btn btn-primary" href="#/home">Включить музыку</a>');
     return '<h1 tabindex="-1">Статистика</h1><p class="kv">Сколько часов и кого вы слушали. Считаются только секунды реального воспроизведения превью.</p>' + nav + body;
   }
 
@@ -994,9 +994,9 @@
       '<button class="btn btn-sm btn-ghost" data-action="reset-demo">Сбросить демо-данные</button></div></div></div>' +
       '<section class="section"><div class="section-head"><h2>Этот месяц</h2><p>' + monthLabel(mk) + '</p><span class="spacer"></span><a class="link-more" href="#/stats">Вся статистика</a></div>' +
       (top.length ? '<p class="kv">Вы слушали <b style="color:var(--text)">' + fmtDur(monthTotal(mk)) + "</b>. Чаще всего:</p>" + statRows(top, top[0].sec)
-        : '<p class="kv">Пока тихо — включите музыку, и здесь появится ваш топ.</p>') + "</section>" +
+        : '<p class="kv">Пока тихо: включите музыку, и здесь появится ваш топ.</p>') + "</section>" +
       '<section class="section"><div class="section-head"><h2>Мои плейлисты</h2><p>' + mine.length + '</p><span class="spacer"></span><button class="btn btn-sm" data-action="create-pl">+ Новый</button></div>' +
-      (mine.length ? '<div class="grid cards">' + mine.map(playlistCard).join("") + "</div>" : '<p class="kv">Создайте первый плейлист — он появится здесь.</p>') + "</section>";
+      (mine.length ? '<div class="grid cards">' + mine.map(playlistCard).join("") + "</div>" : '<p class="kv">Создайте первый плейлист: он появится здесь.</p>') + "</section>";
   }
 
   /* ---------- router ---------- */
@@ -1041,13 +1041,13 @@
         else if (r.name === "files") html = viewFiles();
         else if (r.name === "liked") html = viewLiked();
         else if (r.name === "history") html = viewHistory();
-        else if (r.name === "artist") { var a = artistById(r.id); html = viewArtist(r.id); document.title = (a ? a.name : "Исполнитель") + " — Pulse"; }
-        else if (r.name === "album") { var al = albumById(r.id); html = viewAlbum(r.id); document.title = (al ? al.title : "Альбом") + " — Pulse"; }
-        else if (r.name === "playlist") { var pl = playlistById(r.id); html = viewPlaylist(r.id); document.title = (pl ? pl.title : "Плейлист") + " — Pulse"; }
+        else if (r.name === "artist") { var a = artistById(r.id); html = viewArtist(r.id); document.title = (a ? a.name : "Исполнитель") + ": Pulse"; }
+        else if (r.name === "album") { var al = albumById(r.id); html = viewAlbum(r.id); document.title = (al ? al.title : "Альбом") + ": Pulse"; }
+        else if (r.name === "playlist") { var pl = playlistById(r.id); html = viewPlaylist(r.id); document.title = (pl ? pl.title : "Плейлист") + ": Pulse"; }
         else if (r.name === "profile") html = viewProfile();
         else if (r.name === "stats") html = viewStats();
         else html = viewHome();
-        if (TITLES[r.name]) document.title = TITLES[r.name] + " — Pulse";
+        if (TITLES[r.name]) document.title = TITLES[r.name] + ": Pulse";
       } catch (e) {
         html = errorBox("Не удалось отрисовать страницу.");
       }
@@ -1080,7 +1080,7 @@
     var body = $("#queueBody");
     if (!body) return;
     if (!queue.length) {
-      body.innerHTML = '<div class="empty"><h3>Очередь пуста</h3><p>Включите любой трек — следующие появятся здесь.</p></div>';
+      body.innerHTML = '<div class="empty"><h3>Очередь пуста</h3><p>Включите любой трек: следующие появятся здесь.</p></div>';
       paintPlayState();
       return;
     }
@@ -1304,7 +1304,7 @@
       else if (a === "add-to-pl") { modalAddToPlaylist(id2); }
       else if (a === "do-add-to-pl") {
         var pl = playlistById(el.getAttribute("data-pl")), tr = el.getAttribute("data-track");
-        if (pl && pl.auto) { toast("Автоплейлист менять нельзя — создайте свой"); return; }
+        if (pl && pl.auto) { toast("Автоплейлист менять нельзя, создайте свой"); return; }
         if (pl && tr && pl.trackIds.indexOf(tr) === -1) {
           pl.trackIds.push(tr); pl.updated = "Обновлено только что"; saveStore(); refreshSide();
           toast("Добавлено в «" + pl.title + "»"); modalAddToPlaylist(tr);
@@ -1537,7 +1537,7 @@
   }
 
   function init() {
-    try { console.log("%cPulse — собрано Detroll для портфолио", "font-weight:bold"); } catch (e) {}
+    try { console.log("%cPulse, собрано Detroll для портфолио", "font-weight:bold"); } catch (e) {}
     loadStore();
     engine.setVolume(store.volume);
     engine.setMuted(store.muted);
