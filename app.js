@@ -98,9 +98,11 @@
   function normStr(s) {
     return String(s || "").toLowerCase().replace(/[^a-zа-яё0-9]+/gi, " ").replace(/\s+/g, " ").trim();
   }
+  var pipedDown = false; /* сервис Piped недоступен: дальше не стучимся */
   function ytResolve(t, cb) {
     if (!t || t.local) { cb(null); return; }
     if (ytCache[t.id]) { cb("https://www.youtube.com/watch?v=" + ytCache[t.id]); return; }
+    if (pipedDown) { cb(null); return; }
     var q = encodeURIComponent(t.credit + " " + t.title);
     fetch("https://pipedapi.kavin.rocks/search?q=" + q + "&filter=videos").then(function (r) {
       if (!r.ok) throw new Error("api");
@@ -129,7 +131,7 @@
         ytCacheSave();
         cb("https://www.youtube.com/watch?v=" + best);
       } else cb(null);
-    }).catch(function () { cb(null); });
+    }).catch(function () { pipedDown = true; cb(null); });
   }
   var ytChain = 0;
   function upgradeYTLinks(root) {
@@ -759,7 +761,7 @@
     var mk = monthKey(Date.now());
     return '<div class="hero"><p class="hero-tag">ГЛАВНАЯ · ' + TRACKS.length + " " + plural(TRACKS.length, "ЗАПИСЬ", "ЗАПИСИ", "ЗАПИСЕЙ") + " · " + ARTISTS.length + " " + plural(ARTISTS.length, "ИСПОЛНИТЕЛЬ", "ИСПОЛНИТЕЛЯ", "ИСПОЛНИТЕЛЕЙ") + " · НАСТОЯЩИЕ ТРЕКИ</p>" +
       "<h1>Чарт СНГ: слушайте оригинал</h1>" +
-      "<p>Кишлак, Big Baby Tape, Баста, Zivert и другие: настоящие записи и обложки. В Pulse играют 30-секундные превью, а полные версии: через YouTube прямо в плеере.</p>" +
+      "<p>Кишлак, Big Baby Tape, Баста, Zivert и другие: настоящие записи и обложки. В Pulse играют 30-секундные превью, а полные версии открываются через YouTube прямо в плеере.</p>" +
       '<div class="hero-actions"><button class="btn btn-primary" data-action="play-pop">' + ICONS.play + ' Слушать чарт</button>' +
       '<button class="btn" data-action="shuffle-all">' + ICONS.shuffle + ' Мне повезёт</button>' +
       '<button class="btn btn-ghost" data-action="stop-all" aria-label="Остановить воспроизведение">Стоп</button>' +
